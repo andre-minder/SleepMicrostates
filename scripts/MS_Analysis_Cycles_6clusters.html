@@ -1916,7 +1916,7 @@ Clusters</h1>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Define microstates parameters for correlation</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>clusters <span class="ot">&lt;-</span> <span class="dv">6</span> <span class="co"># Number of clusters</span></span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>template <span class="ot">&lt;-</span> <span class="st">&quot;GrandGrandMeanTemplate&quot;</span> <span class="co"># used template: Custo2017, Koenig2002, GrandGrandMeanTemplate, or IndividualTemplates</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>type <span class="ot">&lt;-</span> <span class="st">&quot;sleep_cycles&quot;</span> <span class="co"># resting or sleep</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>class <span class="ot">&lt;-</span> <span class="st">&quot;sleep_cycles&quot;</span> <span class="co"># resting or sleep</span></span>
 <span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>cycles <span class="ot">=</span> <span class="dv">4</span> <span class="co"># number of cycles</span></span>
 <span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>size_big <span class="ot">=</span> <span class="dv">14</span></span>
@@ -1927,7 +1927,7 @@ Clusters</h1>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># First cycle</span></span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>filename_ms <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;TemporalParameters_&quot;</span>, clusters, <span class="st">&quot; classes_&quot;</span>, template)</span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>data_ms <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;data/&quot;</span>, type, <span class="st">&quot;/cycles/&quot;</span>, filename_ms, <span class="st">&quot;.csv&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>data_ms <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&quot;data/&quot;</span>, class, <span class="st">&quot;/cycles/&quot;</span>, filename_ms, <span class="st">&quot;.csv&quot;</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="fu">read_csv</span>()</span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="do">## Load behavioural data</span></span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>data_behaviour <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/Behaviors_2023-06-20.csv&quot;</span>) </span></code></pre></div>
@@ -1950,63 +1950,63 @@ Clusters</h1>
 <span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="fu">select</span>(ORSEE, group, condition, <span class="fu">contains</span>(<span class="st">&quot;mean_duration&quot;</span>), <span class="sc">-</span><span class="fu">contains</span>(<span class="st">&quot;all&quot;</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;ORSEE&quot;</span>, <span class="st">&quot;group&quot;</span>, <span class="st">&quot;condition&quot;</span>),</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;type&quot;</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;duration&quot;</span></span>
 <span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">condition =</span> <span class="fu">str_sub</span>(condition, <span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">cycle =</span> condition,</span>
 <span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>         <span class="at">stage =</span> group) <span class="sc">|&gt;</span> </span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_sub</span>(type, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">toupper</span>(type),</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">str_sub</span>(class, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">toupper</span>(class),</span>
 <span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>         <span class="at">cycle =</span> <span class="fu">as.factor</span>(cycle),</span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">as.factor</span>(type),</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">as.factor</span>(class),</span>
 <span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">as.factor</span>(stage),</span>
 <span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>         <span class="at">ORSEE =</span> <span class="fu">as.factor</span>(ORSEE),</span>
 <span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>         <span class="at">duration =</span> duration <span class="sc">*</span> <span class="dv">1000</span>,</span>
 <span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">fct_relevel</span>(stage, <span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>, <span class="st">&quot;N2&quot;</span>, <span class="st">&quot;N3&quot;</span>)),</span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_recode</span>(type, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_relevel</span>(type, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_recode</span>(class, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_relevel</span>(class, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Pivot the data set to a long format </span></span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>data_long_occurrence <span class="ot">&lt;-</span> data_ms_clean <span class="sc">|&gt;</span> </span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">select</span>(ORSEE, group, condition, <span class="fu">contains</span>(<span class="st">&quot;mean_occurrence&quot;</span>), <span class="sc">-</span><span class="fu">contains</span>(<span class="st">&quot;all&quot;</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;ORSEE&quot;</span>, <span class="st">&quot;group&quot;</span>, <span class="st">&quot;condition&quot;</span>),</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;type&quot;</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;occurrence&quot;</span></span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">condition =</span> <span class="fu">str_sub</span>(condition, <span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">cycle =</span> condition,</span>
 <span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>         <span class="at">stage =</span> group) <span class="sc">|&gt;</span> </span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_sub</span>(type, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">toupper</span>(type),</span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">str_sub</span>(class, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">toupper</span>(class),</span>
 <span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>         <span class="at">cycle =</span> <span class="fu">as.factor</span>(cycle),</span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">as.factor</span>(type),</span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">as.factor</span>(class),</span>
 <span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">as.factor</span>(stage),</span>
 <span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>         <span class="at">ORSEE =</span> <span class="fu">as.factor</span>(ORSEE),</span>
 <span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">fct_relevel</span>(stage, <span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>, <span class="st">&quot;N2&quot;</span>, <span class="st">&quot;N3&quot;</span>)),</span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_recode</span>(type, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_relevel</span>(type, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_recode</span>(class, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_relevel</span>(class, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Pivot the data set to a long format </span></span>
 <span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>data_long_coverage <span class="ot">&lt;-</span> data_ms_clean <span class="sc">|&gt;</span> </span>
 <span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>  <span class="fu">select</span>(ORSEE, group, condition, <span class="fu">contains</span>(<span class="st">&quot;coverage&quot;</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(</span>
 <span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    <span class="at">cols =</span> <span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;ORSEE&quot;</span>, <span class="st">&quot;group&quot;</span>, <span class="st">&quot;condition&quot;</span>),</span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;type&quot;</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>    <span class="at">names_to =</span> <span class="st">&quot;class&quot;</span>,</span>
 <span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>    <span class="at">values_to =</span> <span class="st">&quot;coverage&quot;</span></span>
 <span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
 <span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">condition =</span> <span class="fu">str_sub</span>(condition, <span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span>)) <span class="sc">|&gt;</span> </span>
 <span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">cycle =</span> condition,</span>
 <span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>         <span class="at">stage =</span> group) <span class="sc">|&gt;</span> </span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">type =</span> <span class="fu">str_sub</span>(type, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">toupper</span>(type),</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">class =</span> <span class="fu">str_sub</span>(class, <span class="sc">-</span><span class="dv">1</span>, <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">toupper</span>(class),</span>
 <span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>         <span class="at">cycle =</span> <span class="fu">as.factor</span>(cycle),</span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">as.factor</span>(type),</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">as.factor</span>(class),</span>
 <span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">as.factor</span>(stage),</span>
 <span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>         <span class="at">ORSEE =</span> <span class="fu">as.factor</span>(ORSEE),</span>
 <span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>         <span class="at">coverage =</span> coverage,</span>
 <span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>         <span class="at">stage =</span> <span class="fu">fct_relevel</span>(stage, <span class="fu">c</span>(<span class="st">&quot;N1&quot;</span>, <span class="st">&quot;N2&quot;</span>, <span class="st">&quot;N3&quot;</span>)),</span>
-<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_recode</span>(type, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
-<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>         <span class="at">type =</span> <span class="fu">fct_relevel</span>(type, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_recode</span>(class, <span class="st">&quot;F&quot;</span> <span class="ot">=</span> <span class="st">&quot;G&quot;</span>),</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>         <span class="at">class =</span> <span class="fu">fct_relevel</span>(class, <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;B&quot;</span>, <span class="st">&quot;C&quot;</span>, <span class="st">&quot;D&quot;</span>, <span class="st">&quot;E&quot;</span>, <span class="st">&quot;F&quot;</span>)))</span></code></pre></div>
 </div>
 <div id="descriptives" class="section level1">
 <h1>Descriptives</h1>
@@ -2074,8 +2074,8 @@ Clusters</h1>
 <h2>Duration</h2>
 <div id="model" class="section level3">
 <h3>Model</h3>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>duration_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(duration <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> type <span class="sc">+</span> </span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>                         (<span class="dv">1</span><span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>type<span class="sc">:</span>ORSEE),</span>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>duration_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(duration <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> class <span class="sc">+</span> </span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>                         (<span class="dv">1</span><span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>class<span class="sc">:</span>ORSEE),</span>
 <span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>                       <span class="at">data =</span> data_long_duration, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a></span>
 <span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="fu">tab_model</span>(duration_model)</span></code></pre></div>
@@ -2188,7 +2188,7 @@ stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [B]
+class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.31
@@ -2202,7 +2202,7 @@ type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [C]
+class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.18
@@ -2216,7 +2216,7 @@ type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [D]
+class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.59
@@ -2230,7 +2230,7 @@ type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [E]
+class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -8.51
@@ -2244,7 +2244,7 @@ type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [F]
+class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -10.49
@@ -2342,7 +2342,7 @@ cycle [4] × stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [B]
+cycle [2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.41
@@ -2356,7 +2356,7 @@ cycle [2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [B]
+cycle [3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.85
@@ -2370,7 +2370,7 @@ cycle [3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [B]
+cycle [4] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.55
@@ -2384,7 +2384,7 @@ cycle [4] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [C]
+cycle [2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 7.12
@@ -2398,7 +2398,7 @@ cycle [2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [C]
+cycle [3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.03
@@ -2412,7 +2412,7 @@ cycle [3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [C]
+cycle [4] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.24
@@ -2426,7 +2426,7 @@ cycle [4] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [D]
+cycle [2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.32
@@ -2440,7 +2440,7 @@ cycle [2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [D]
+cycle [3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 8.27
@@ -2454,7 +2454,7 @@ cycle [3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [D]
+cycle [4] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.57
@@ -2468,7 +2468,7 @@ cycle [4] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [E]
+cycle [2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.22
@@ -2482,7 +2482,7 @@ cycle [2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [E]
+cycle [3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.40
@@ -2496,7 +2496,7 @@ cycle [3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [E]
+cycle [4] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.81
@@ -2510,7 +2510,7 @@ cycle [4] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [F]
+cycle [2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.12
@@ -2524,7 +2524,7 @@ cycle [2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [F]
+cycle [3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.06
@@ -2538,7 +2538,7 @@ cycle [3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [F]
+cycle [4] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.74
@@ -2552,7 +2552,7 @@ cycle [4] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [B]
+stage [N2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.45
@@ -2566,7 +2566,7 @@ stage [N2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [B]
+stage [N3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -13.02
@@ -2580,7 +2580,7 @@ stage [N3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [C]
+stage [N2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.32
@@ -2594,7 +2594,7 @@ stage [N2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [C]
+stage [N3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 9.67
@@ -2608,7 +2608,7 @@ stage [N3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [D]
+stage [N2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 8.08
@@ -2622,7 +2622,7 @@ stage [N2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [D]
+stage [N3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 9.20
@@ -2636,7 +2636,7 @@ stage [N3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [E]
+stage [N2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.48
@@ -2650,7 +2650,7 @@ stage [N2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [E]
+stage [N3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.94
@@ -2664,7 +2664,7 @@ stage [N3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [F]
+stage [N2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.64
@@ -2678,7 +2678,7 @@ stage [N2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [F]
+stage [N3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.43
@@ -2692,7 +2692,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [B]
+(cycle [2] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.49
@@ -2706,7 +2706,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [B]
+(cycle [3] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.74
@@ -2720,7 +2720,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [B]
+(cycle [4] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.18
@@ -2734,7 +2734,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [B]
+(cycle [2] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.03
@@ -2748,7 +2748,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [B]
+(cycle [3] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 5.77
@@ -2762,7 +2762,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [B]
+(cycle [4] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.55
@@ -2776,7 +2776,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [C]
+(cycle [2] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -6.72
@@ -2790,7 +2790,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [C]
+(cycle [3] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.06
@@ -2804,7 +2804,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [C]
+(cycle [4] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.05
@@ -2818,7 +2818,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [C]
+(cycle [2] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -7.61
@@ -2832,7 +2832,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [C]
+(cycle [3] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.23
@@ -2846,7 +2846,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [C]
+(cycle [4] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -9.13
@@ -2860,7 +2860,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [D]
+(cycle [2] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -6.47
@@ -2874,7 +2874,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [D]
+(cycle [3] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -8.82
@@ -2888,7 +2888,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [D]
+(cycle [4] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -6.11
@@ -2902,7 +2902,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [D]
+(cycle [2] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -7.86
@@ -2916,7 +2916,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [D]
+(cycle [3] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -10.90
@@ -2930,7 +2930,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [D]
+(cycle [4] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -9.07
@@ -2944,7 +2944,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [E]
+(cycle [2] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.28
@@ -2958,7 +2958,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [E]
+(cycle [3] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.08
@@ -2972,7 +2972,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [E]
+(cycle [4] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.99
@@ -2986,7 +2986,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [E]
+(cycle [2] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.15
@@ -3000,7 +3000,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [E]
+(cycle [3] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.13
@@ -3014,7 +3014,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [E]
+(cycle [4] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.35
@@ -3028,7 +3028,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [F]
+(cycle [2] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.61
@@ -3042,7 +3042,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [F]
+(cycle [3] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.90
@@ -3056,7 +3056,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [F]
+(cycle [4] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.23
@@ -3070,7 +3070,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [F]
+(cycle [2] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.28
@@ -3084,7 +3084,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [F]
+(cycle [3] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.77
@@ -3098,7 +3098,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [F]
+(cycle [4] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.69
@@ -3125,7 +3125,7 @@ Random Effects
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-τ<sub>00</sub> <sub>type:ORSEE</sub>
+τ<sub>00</sub> <sub>class:ORSEE</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 9.81
@@ -3181,7 +3181,7 @@ N <sub>stage</sub>
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-N <sub>type</sub>
+N <sub>class</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 6
@@ -3286,7 +3286,7 @@ stage
 </tr>
 <tr>
 <td style="text-align:left;">
-type
+class
 </td>
 <td style="text-align:right;">
 29080.04
@@ -3332,7 +3332,7 @@ cycle:stage
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:type
+cycle:class
 </td>
 <td style="text-align:right;">
 1490.42
@@ -3355,7 +3355,7 @@ cycle:type
 </tr>
 <tr>
 <td style="text-align:left;">
-stage:type
+stage:class
 </td>
 <td style="text-align:right;">
 12377.38
@@ -3378,7 +3378,7 @@ stage:type
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:stage:type
+cycle:stage:class
 </td>
 <td style="text-align:right;">
 3937.03
@@ -3404,9 +3404,9 @@ cycle:stage:type
 </div>
 <div id="post-hoc-test" class="section level3">
 <h3>Post-hoc Test</h3>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">emmeans</span>(duration_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="fu">emmeans</span>(duration_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class)</span></code></pre></div>
 <pre><code>## $emmeans
-## type = A:
+## class = A:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      48.6 1.50 571     45.7     51.6
 ##  2     N1      60.6 1.62 737     57.5     63.8
@@ -3421,7 +3421,7 @@ cycle:stage:type
 ##  3     N3      97.9 1.50 561     95.0    100.8
 ##  4     N3      86.6 1.63 758     83.4     89.8
 ## 
-## type = B:
+## class = B:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      44.3 1.50 571     41.4     47.3
 ##  2     N1      52.9 1.62 737     49.7     56.1
@@ -3436,7 +3436,7 @@ cycle:stage:type
 ##  3     N3      84.5 1.50 561     81.5     87.4
 ##  4     N3      74.3 1.63 758     71.1     77.5
 ## 
-## type = C:
+## class = C:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      46.5 1.50 571     43.5     49.4
 ##  2     N1      65.6 1.62 737     62.4     68.8
@@ -3451,7 +3451,7 @@ cycle:stage:type
 ##  3     N3     104.2 1.50 561    101.3    107.1
 ##  4     N3      89.2 1.63 758     86.0     92.4
 ## 
-## type = D:
+## class = D:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      43.0 1.50 571     40.1     46.0
 ##  2     N1      61.4 1.62 737     58.2     64.5
@@ -3466,7 +3466,7 @@ cycle:stage:type
 ##  3     N3      98.9 1.50 561     95.9    101.8
 ##  4     N3      87.7 1.63 758     84.5     91.0
 ## 
-## type = E:
+## class = E:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      40.1 1.50 571     37.2     43.1
 ##  2     N1      52.3 1.62 737     49.2     55.5
@@ -3481,7 +3481,7 @@ cycle:stage:type
 ##  3     N3      90.0 1.50 561     87.0     92.9
 ##  4     N3      79.3 1.63 758     76.1     82.6
 ## 
-## type = F:
+## class = F:
 ##  cycle stage emmean   SE  df lower.CL upper.CL
 ##  1     N1      38.1 1.50 571     35.2     41.1
 ##  2     N1      50.0 1.62 737     46.9     53.2
@@ -3500,7 +3500,7 @@ cycle:stage:type
 ## Confidence level used: 0.95 
 ## 
 ## $contrasts
-## type = A:
+## class = A:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  -12.000 1.77 1317  -6.780  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   -6.079 1.82 1390  -3.343  0.0402
@@ -3569,7 +3569,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3   16.918 1.77 1276   9.541  &lt;.0001
 ##  cycle3 N3 - cycle4 N3   11.266 1.79 1288   6.303  &lt;.0001
 ## 
-## type = B:
+## class = B:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   -8.586 1.77 1317  -4.852  0.0001
 ##  cycle1 N1 - cycle3 N1   -4.226 1.82 1390  -2.324  0.4595
@@ -3638,7 +3638,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3   14.535 1.77 1276   8.198  &lt;.0001
 ##  cycle3 N3 - cycle4 N3   10.183 1.79 1288   5.697  &lt;.0001
 ## 
-## type = C:
+## class = C:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  -19.115 1.77 1317 -10.801  &lt;.0001
 ##  cycle1 N1 - cycle3 N1  -10.113 1.82 1390  -5.562  &lt;.0001
@@ -3707,7 +3707,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3   21.317 1.77 1276  12.023  &lt;.0001
 ##  cycle3 N3 - cycle4 N3   14.957 1.79 1288   8.368  &lt;.0001
 ## 
-## type = D:
+## class = D:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  -18.324 1.77 1317 -10.354  &lt;.0001
 ##  cycle1 N1 - cycle3 N1  -14.347 1.82 1390  -7.891  &lt;.0001
@@ -3776,7 +3776,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3   17.876 1.77 1276  10.082  &lt;.0001
 ##  cycle3 N3 - cycle4 N3   11.134 1.79 1288   6.229  &lt;.0001
 ## 
-## type = E:
+## class = E:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  -12.215 1.77 1317  -6.902  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   -7.482 1.82 1390  -4.115  0.0024
@@ -3845,7 +3845,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3   14.124 1.77 1276   7.966  &lt;.0001
 ##  cycle3 N3 - cycle4 N3   10.636 1.79 1288   5.951  &lt;.0001
 ## 
-## type = F:
+## class = F:
 ##  contrast              estimate   SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  -11.882 1.77 1317  -6.714  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   -8.141 1.82 1390  -4.478  0.0005
@@ -3916,20 +3916,20 @@ cycle:stage:type
 ## 
 ## Degrees-of-freedom method: kenward-roger 
 ## P value adjustment: tukey method for comparing a family of 12 estimates</code></pre>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>est_means_duration <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(duration_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type) <span class="sc">|&gt;</span> </span>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>est_means_duration <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(duration_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class) <span class="sc">|&gt;</span> </span>
 <span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
 </div>
 <div id="plot" class="section level3">
 <h3>Plot</h3>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a>duration_emm_plot <span class="ot">&lt;-</span> est_means_duration <span class="sc">|&gt;</span> </span>
-<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="fu">select</span>(type, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" tabindex="-1"></a>  <span class="fu">select</span>(class, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
 <span id="cb21-3"><a href="#cb21-3" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">72</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb21-4"><a href="#cb21-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">group =</span> stage, <span class="at">color =</span> stage, <span class="at">y =</span> emmean, <span class="at">x =</span> cycle)) <span class="sc">+</span></span>
 <span id="cb21-5"><a href="#cb21-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">fill =</span> cycle, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb21-6"><a href="#cb21-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb21-7"><a href="#cb21-7" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>lower.CL, <span class="at">ymax=</span>upper.CL), <span class="at">width=</span>.<span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb21-8"><a href="#cb21-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Microstate Classes&quot;</span>) <span class="sc">+</span></span>
-<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> type, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> class, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb21-10"><a href="#cb21-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb21-11"><a href="#cb21-11" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb21-12"><a href="#cb21-12" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> size_big, <span class="at">hjust=</span> <span class="fl">0.5</span>),</span>
@@ -3954,8 +3954,8 @@ cycle:stage:type
 <h2>Occurrence</h2>
 <div id="model-1" class="section level3">
 <h3>Model</h3>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>occurrence_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(occurrence <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> type <span class="sc">+</span></span>
-<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>                         (<span class="dv">1</span> <span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>type<span class="sc">:</span>ORSEE), </span>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a>occurrence_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(occurrence <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> class <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>                         (<span class="dv">1</span> <span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>class<span class="sc">:</span>ORSEE), </span>
 <span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>                         <span class="at">data =</span> data_long_occurrence, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb22-4"><a href="#cb22-4" tabindex="-1"></a><span class="fu">tab_model</span>(occurrence_model)</span></code></pre></div>
 <table style="border-collapse:collapse; border:none;">
@@ -4067,7 +4067,7 @@ stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [B]
+class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.27
@@ -4081,7 +4081,7 @@ type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [C]
+class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.27
@@ -4095,7 +4095,7 @@ type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [D]
+class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.84
@@ -4109,7 +4109,7 @@ type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [E]
+class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.08
@@ -4123,7 +4123,7 @@ type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [F]
+class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.28
@@ -4221,7 +4221,7 @@ cycle [4] × stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [B]
+cycle [2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.26
@@ -4235,7 +4235,7 @@ cycle [2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [B]
+cycle [3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.23
@@ -4249,7 +4249,7 @@ cycle [3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [B]
+cycle [4] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.40
@@ -4263,7 +4263,7 @@ cycle [4] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [C]
+cycle [2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.36
@@ -4277,7 +4277,7 @@ cycle [2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [C]
+cycle [3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.36
@@ -4291,7 +4291,7 @@ cycle [3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [C]
+cycle [4] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.22
@@ -4305,7 +4305,7 @@ cycle [4] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [D]
+cycle [2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.66
@@ -4319,7 +4319,7 @@ cycle [2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [D]
+cycle [3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.85
@@ -4333,7 +4333,7 @@ cycle [3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [D]
+cycle [4] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.69
@@ -4347,7 +4347,7 @@ cycle [4] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [E]
+cycle [2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.24
@@ -4361,7 +4361,7 @@ cycle [2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [E]
+cycle [3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.29
@@ -4375,7 +4375,7 @@ cycle [3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [E]
+cycle [4] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.16
@@ -4389,7 +4389,7 @@ cycle [4] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [F]
+cycle [2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.46
@@ -4403,7 +4403,7 @@ cycle [2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [F]
+cycle [3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.57
@@ -4417,7 +4417,7 @@ cycle [3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [F]
+cycle [4] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.35
@@ -4431,7 +4431,7 @@ cycle [4] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [B]
+stage [N2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.20
@@ -4445,7 +4445,7 @@ stage [N2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [B]
+stage [N3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.10
@@ -4459,7 +4459,7 @@ stage [N3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [C]
+stage [N2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.26
@@ -4473,7 +4473,7 @@ stage [N2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [C]
+stage [N3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.37
@@ -4487,7 +4487,7 @@ stage [N3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [D]
+stage [N2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.82
@@ -4501,7 +4501,7 @@ stage [N2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [D]
+stage [N3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.88
@@ -4515,7 +4515,7 @@ stage [N3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [E]
+stage [N2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.77
@@ -4529,7 +4529,7 @@ stage [N2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [E]
+stage [N3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.84
@@ -4543,7 +4543,7 @@ stage [N3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [F]
+stage [N2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.97
@@ -4557,7 +4557,7 @@ stage [N2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [F]
+stage [N3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.02
@@ -4571,7 +4571,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [B]
+(cycle [2] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.26
@@ -4585,7 +4585,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [B]
+(cycle [3] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.20
@@ -4599,7 +4599,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [B]
+(cycle [4] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.37
@@ -4613,7 +4613,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [B]
+(cycle [2] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.27
@@ -4627,7 +4627,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [B]
+(cycle [3] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.24
@@ -4641,7 +4641,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [B]
+(cycle [4] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.34
@@ -4655,7 +4655,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [C]
+(cycle [2] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.35
@@ -4669,7 +4669,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [C]
+(cycle [3] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.33
@@ -4683,7 +4683,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [C]
+(cycle [4] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.12
@@ -4697,7 +4697,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [C]
+(cycle [2] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.40
@@ -4711,7 +4711,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [C]
+(cycle [3] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.35
@@ -4725,7 +4725,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [C]
+(cycle [4] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.28
@@ -4739,7 +4739,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [D]
+(cycle [2] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.70
@@ -4753,7 +4753,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [D]
+(cycle [3] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.90
@@ -4767,7 +4767,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [D]
+(cycle [4] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.64
@@ -4781,7 +4781,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [D]
+(cycle [2] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.71
@@ -4795,7 +4795,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [D]
+(cycle [3] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.93
@@ -4809,7 +4809,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [D]
+(cycle [4] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.73
@@ -4823,7 +4823,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [E]
+(cycle [2] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.19
@@ -4837,7 +4837,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [E]
+(cycle [3] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.20
@@ -4851,7 +4851,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [E]
+(cycle [4] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.03
@@ -4865,7 +4865,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [E]
+(cycle [2] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.26
@@ -4879,7 +4879,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [E]
+(cycle [3] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.22
@@ -4893,7 +4893,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [E]
+(cycle [4] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.16
@@ -4907,7 +4907,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [F]
+(cycle [2] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.46
@@ -4921,7 +4921,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [F]
+(cycle [3] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.55
@@ -4935,7 +4935,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [F]
+(cycle [4] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.23
@@ -4949,7 +4949,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [F]
+(cycle [2] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.48
@@ -4963,7 +4963,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [F]
+(cycle [3] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.59
@@ -4977,7 +4977,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [F]
+(cycle [4] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.36
@@ -5004,7 +5004,7 @@ Random Effects
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-τ<sub>00</sub> <sub>type:ORSEE</sub>
+τ<sub>00</sub> <sub>class:ORSEE</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 0.05
@@ -5060,7 +5060,7 @@ N <sub>stage</sub>
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-N <sub>type</sub>
+N <sub>class</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 6
@@ -5165,7 +5165,7 @@ stage
 </tr>
 <tr>
 <td style="text-align:left;">
-type
+class
 </td>
 <td style="text-align:right;">
 21.19
@@ -5211,7 +5211,7 @@ cycle:stage
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:type
+cycle:class
 </td>
 <td style="text-align:right;">
 8.43
@@ -5234,7 +5234,7 @@ cycle:type
 </tr>
 <tr>
 <td style="text-align:left;">
-stage:type
+stage:class
 </td>
 <td style="text-align:right;">
 49.19
@@ -5257,7 +5257,7 @@ stage:type
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:stage:type
+cycle:stage:class
 </td>
 <td style="text-align:right;">
 16.13
@@ -5283,9 +5283,9 @@ cycle:stage:type
 </div>
 <div id="post-hoc-tests" class="section level3">
 <h3>Post-hoc Tests</h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">emmeans</span>(occurrence_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type)</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" tabindex="-1"></a><span class="fu">emmeans</span>(occurrence_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class)</span></code></pre></div>
 <pre><code>## $emmeans
-## type = A:
+## class = A:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      4.48 0.0609  697     4.36     4.60
 ##  2     N1      3.41 0.0652  881     3.28     3.53
@@ -5300,7 +5300,7 @@ cycle:stage:type
 ##  3     N3      1.94 0.0606  686     1.82     2.06
 ##  4     N3      2.22 0.0657  905     2.09     2.35
 ## 
-## type = B:
+## class = B:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      4.20 0.0609  697     4.08     4.32
 ##  2     N1      2.87 0.0652  881     2.74     3.00
@@ -5315,7 +5315,7 @@ cycle:stage:type
 ##  3     N3      1.57 0.0606  686     1.45     1.69
 ##  4     N3      1.78 0.0657  905     1.65     1.91
 ## 
-## type = C:
+## class = C:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      4.21 0.0609  697     4.09     4.33
 ##  2     N1      3.50 0.0652  881     3.37     3.63
@@ -5330,7 +5330,7 @@ cycle:stage:type
 ##  3     N3      2.05 0.0606  686     1.93     2.17
 ##  4     N3      2.27 0.0657  905     2.14     2.39
 ## 
-## type = D:
+## class = D:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      3.64 0.0609  697     3.52     3.76
 ##  2     N1      3.23 0.0652  881     3.10     3.35
@@ -5345,7 +5345,7 @@ cycle:stage:type
 ##  3     N3      1.91 0.0606  686     1.79     2.03
 ##  4     N3      2.23 0.0657  905     2.11     2.36
 ## 
-## type = E:
+## class = E:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      3.39 0.0609  697     3.28     3.51
 ##  2     N1      2.57 0.0652  881     2.44     2.70
@@ -5360,7 +5360,7 @@ cycle:stage:type
 ##  3     N3      1.77 0.0606  686     1.65     1.89
 ##  4     N3      1.99 0.0657  905     1.86     2.12
 ## 
-## type = F:
+## class = F:
 ##  cycle stage emmean     SE   df lower.CL upper.CL
 ##  1     N1      3.20 0.0609  697     3.08     3.32
 ##  2     N1      2.60 0.0652  881     2.47     2.72
@@ -5379,7 +5379,7 @@ cycle:stage:type
 ## Confidence level used: 0.95 
 ## 
 ## $contrasts
-## type = A:
+## class = A:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   1.0712 0.0663 1674  16.154  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   0.9246 0.0683 1752  13.545  &lt;.0001
@@ -5448,7 +5448,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  -0.3751 0.0664 1623  -5.649  &lt;.0001
 ##  cycle3 N3 - cycle4 N3  -0.2818 0.0670 1635  -4.210  0.0016
 ## 
-## type = B:
+## class = B:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   1.3347 0.0663 1674  20.128  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   1.1524 0.0683 1752  16.882  &lt;.0001
@@ -5517,7 +5517,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  -0.3026 0.0664 1623  -4.558  0.0003
 ##  cycle3 N3 - cycle4 N3  -0.2082 0.0670 1635  -3.110  0.0808
 ## 
-## type = C:
+## class = C:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   0.7107 0.0663 1674  10.719  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   0.5687 0.0683 1752   8.330  &lt;.0001
@@ -5586,7 +5586,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  -0.3525 0.0664 1623  -5.310  &lt;.0001
 ##  cycle3 N3 - cycle4 N3  -0.2144 0.0670 1635  -3.202  0.0619
 ## 
-## type = D:
+## class = D:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   0.4127 0.0663 1674   6.224  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   0.0721 0.0683 1752   1.056  0.9963
@@ -5655,7 +5655,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  -0.3910 0.0664 1623  -5.889  &lt;.0001
 ##  cycle3 N3 - cycle4 N3  -0.3264 0.0670 1635  -4.875  0.0001
 ## 
-## type = E:
+## class = E:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   0.8270 0.0663 1674  12.472  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   0.6364 0.0683 1752   9.323  &lt;.0001
@@ -5724,7 +5724,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  -0.3951 0.0664 1623  -5.951  &lt;.0001
 ##  cycle3 N3 - cycle4 N3  -0.2175 0.0670 1635  -3.248  0.0539
 ## 
-## type = F:
+## class = F:
 ##  contrast              estimate     SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1   0.6070 0.0663 1674   9.154  &lt;.0001
 ##  cycle1 N1 - cycle3 N1   0.3527 0.0683 1752   5.166  &lt;.0001
@@ -5795,20 +5795,20 @@ cycle:stage:type
 ## 
 ## Degrees-of-freedom method: kenward-roger 
 ## P value adjustment: tukey method for comparing a family of 12 estimates</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>est_means_occurrence <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(occurrence_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type) <span class="sc">|&gt;</span> </span>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a>est_means_occurrence <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(occurrence_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class) <span class="sc">|&gt;</span> </span>
 <span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span></code></pre></div>
 </div>
 <div id="plot-1" class="section level3">
 <h3>Plot</h3>
 <div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a>est_means_occurrence_plot <span class="ot">&lt;-</span> est_means_occurrence <span class="sc">|&gt;</span> </span>
-<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">select</span>(type, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="#cb27-2" tabindex="-1"></a>  <span class="fu">select</span>(class, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
 <span id="cb27-3"><a href="#cb27-3" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">72</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb27-4"><a href="#cb27-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">group =</span> stage, <span class="at">color =</span> stage, <span class="at">y =</span> emmean, <span class="at">x =</span> cycle)) <span class="sc">+</span></span>
 <span id="cb27-5"><a href="#cb27-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">fill =</span> cycle, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb27-6"><a href="#cb27-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb27-7"><a href="#cb27-7" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>lower.CL, <span class="at">ymax=</span>upper.CL), <span class="at">width=</span>.<span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb27-8"><a href="#cb27-8" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Microstate Classes&quot;</span>) <span class="sc">+</span></span>
-<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> type, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb27-9"><a href="#cb27-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>( <span class="sc">~</span> class, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb27-10"><a href="#cb27-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb27-11"><a href="#cb27-11" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
 <span id="cb27-12"><a href="#cb27-12" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> size_big, <span class="at">hjust=</span> <span class="fl">0.5</span>),</span>
@@ -5833,8 +5833,8 @@ cycle:stage:type
 <h2>Coverage</h2>
 <div id="model-2" class="section level3">
 <h3>Model</h3>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>coverage_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(coverage <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> type <span class="sc">+</span> </span>
-<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>                         (<span class="dv">1</span> <span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>type<span class="sc">:</span>ORSEE), </span>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" tabindex="-1"></a>coverage_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(coverage <span class="sc">~</span> cycle <span class="sc">*</span> stage <span class="sc">*</span> class <span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" tabindex="-1"></a>                         (<span class="dv">1</span> <span class="sc">|</span> ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>cycle<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>stage<span class="sc">:</span>ORSEE) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>class<span class="sc">:</span>ORSEE), </span>
 <span id="cb28-3"><a href="#cb28-3" tabindex="-1"></a>                         <span class="at">data =</span> data_long_coverage, <span class="at">REML =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb28-4"><a href="#cb28-4" tabindex="-1"></a></span>
 <span id="cb28-5"><a href="#cb28-5" tabindex="-1"></a><span class="fu">tab_model</span>(coverage_model)</span></code></pre></div>
@@ -5947,7 +5947,7 @@ stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [B]
+class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.88
@@ -5961,7 +5961,7 @@ type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [C]
+class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.03
@@ -5975,7 +5975,7 @@ type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [D]
+class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.69
@@ -5989,7 +5989,7 @@ type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [E]
+class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -7.63
@@ -6003,7 +6003,7 @@ type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-type [F]
+class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -8.91
@@ -6101,7 +6101,7 @@ cycle [4] × stage [N3]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [B]
+cycle [2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.13
@@ -6115,7 +6115,7 @@ cycle [2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [B]
+cycle [3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.61
@@ -6129,7 +6129,7 @@ cycle [3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [B]
+cycle [4] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.26
@@ -6143,7 +6143,7 @@ cycle [4] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [C]
+cycle [2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.10
@@ -6157,7 +6157,7 @@ cycle [2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [C]
+cycle [3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.18
@@ -6171,7 +6171,7 @@ cycle [3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [C]
+cycle [4] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.50
@@ -6185,7 +6185,7 @@ cycle [4] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [D]
+cycle [2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.96
@@ -6199,7 +6199,7 @@ cycle [2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [D]
+cycle [3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.53
@@ -6213,7 +6213,7 @@ cycle [3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [D]
+cycle [4] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 5.37
@@ -6227,7 +6227,7 @@ cycle [4] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [E]
+cycle [2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.10
@@ -6241,7 +6241,7 @@ cycle [2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [E]
+cycle [3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.65
@@ -6255,7 +6255,7 @@ cycle [3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [E]
+cycle [4] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.91
@@ -6269,7 +6269,7 @@ cycle [4] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [2] × type [F]
+cycle [2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.00
@@ -6283,7 +6283,7 @@ cycle [2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [3] × type [F]
+cycle [3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.02
@@ -6297,7 +6297,7 @@ cycle [3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-cycle [4] × type [F]
+cycle [4] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.94
@@ -6311,7 +6311,7 @@ cycle [4] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [B]
+stage [N2] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.93
@@ -6325,7 +6325,7 @@ stage [N2] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [B]
+stage [N3] × class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.48
@@ -6339,7 +6339,7 @@ stage [N3] × type [B]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [C]
+stage [N2] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.57
@@ -6353,7 +6353,7 @@ stage [N2] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [C]
+stage [N3] × class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.53
@@ -6367,7 +6367,7 @@ stage [N3] × type [C]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [D]
+stage [N2] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.24
@@ -6381,7 +6381,7 @@ stage [N2] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [D]
+stage [N3] × class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 6.86
@@ -6395,7 +6395,7 @@ stage [N3] × type [D]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [E]
+stage [N2] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 4.41
@@ -6409,7 +6409,7 @@ stage [N2] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [E]
+stage [N3] × class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.33
@@ -6423,7 +6423,7 @@ stage [N3] × type [E]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N2] × type [F]
+stage [N2] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 5.34
@@ -6437,7 +6437,7 @@ stage [N2] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-stage [N3] × type [F]
+stage [N3] × class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 3.97
@@ -6451,7 +6451,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [B]
+(cycle [2] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.85
@@ -6465,7 +6465,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [B]
+(cycle [3] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 1.44
@@ -6479,7 +6479,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [B]
+(cycle [4] × stage [N2])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.31
@@ -6493,7 +6493,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [B]
+(cycle [2] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.70
@@ -6507,7 +6507,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [B]
+(cycle [3] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.45
@@ -6521,7 +6521,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [B]
+(cycle [4] × stage [N3])<br>× class [B]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 2.81
@@ -6535,7 +6535,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [C]
+(cycle [2] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.91
@@ -6549,7 +6549,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [C]
+(cycle [3] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.96
@@ -6563,7 +6563,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [C]
+(cycle [4] × stage [N2])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.86
@@ -6577,7 +6577,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [C]
+(cycle [2] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.55
@@ -6591,7 +6591,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [C]
+(cycle [3] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -3.36
@@ -6605,7 +6605,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [C]
+(cycle [4] × stage [N3])<br>× class [C]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.02
@@ -6619,7 +6619,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [D]
+(cycle [2] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.27
@@ -6633,7 +6633,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [D]
+(cycle [3] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -7.00
@@ -6647,7 +6647,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [D]
+(cycle [4] × stage [N2])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -4.87
@@ -6661,7 +6661,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [D]
+(cycle [2] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -5.71
@@ -6675,7 +6675,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [D]
+(cycle [3] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -7.82
@@ -6689,7 +6689,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [D]
+(cycle [4] × stage [N3])<br>× class [D]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -6.02
@@ -6703,7 +6703,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [E]
+(cycle [2] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.81
@@ -6717,7 +6717,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [E]
+(cycle [3] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.76
@@ -6731,7 +6731,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [E]
+(cycle [4] × stage [N2])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.32
@@ -6745,7 +6745,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [E]
+(cycle [2] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.79
@@ -6759,7 +6759,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [E]
+(cycle [3] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.26
@@ -6773,7 +6773,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [E]
+(cycle [4] × stage [N3])<br>× class [E]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 0.21
@@ -6787,7 +6787,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N2])<br>× type [F]
+(cycle [2] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.12
@@ -6801,7 +6801,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N2])<br>× type [F]
+(cycle [3] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.81
@@ -6815,7 +6815,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N2])<br>× type [F]
+(cycle [4] × stage [N2])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.82
@@ -6829,7 +6829,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [2] × stage [N3])<br>× type [F]
+(cycle [2] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -1.83
@@ -6843,7 +6843,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [3] × stage [N3])<br>× type [F]
+(cycle [3] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -2.75
@@ -6857,7 +6857,7 @@ stage [N3] × type [F]
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">
-(cycle [4] × stage [N3])<br>× type [F]
+(cycle [4] × stage [N3])<br>× class [F]
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">
 -0.77
@@ -6884,7 +6884,7 @@ Random Effects
 </tr>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-τ<sub>00</sub> <sub>type:ORSEE</sub>
+τ<sub>00</sub> <sub>class:ORSEE</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 7.42
@@ -6933,7 +6933,7 @@ N <sub>stage</sub>
 </td>
 <tr>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">
-N <sub>type</sub>
+N <sub>class</sub>
 </td>
 <td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">
 6
@@ -7038,7 +7038,7 @@ stage
 </tr>
 <tr>
 <td style="text-align:left;">
-type
+class
 </td>
 <td style="text-align:right;">
 659.16
@@ -7084,7 +7084,7 @@ cycle:stage
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:type
+cycle:class
 </td>
 <td style="text-align:right;">
 409.89
@@ -7107,7 +7107,7 @@ cycle:type
 </tr>
 <tr>
 <td style="text-align:left;">
-stage:type
+stage:class
 </td>
 <td style="text-align:right;">
 2146.12
@@ -7130,7 +7130,7 @@ stage:type
 </tr>
 <tr>
 <td style="text-align:left;">
-cycle:stage:type
+cycle:stage:class
 </td>
 <td style="text-align:right;">
 1130.39
@@ -7156,9 +7156,9 @@ cycle:stage:type
 </div>
 <div id="post-hoc-test-1" class="section level3">
 <h3>Post-hoc Test</h3>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">emmeans</span>(coverage_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">emmeans</span>(coverage_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class)</span></code></pre></div>
 <pre><code>## $emmeans
-## type = A:
+## class = A:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      21.2 0.432 546     20.3     22.0
 ##  2     N1      19.5 0.450 637     18.6     20.4
@@ -7173,7 +7173,7 @@ cycle:stage:type
 ##  3     N3      18.5 0.431 540     17.6     19.3
 ##  4     N3      18.5 0.452 649     17.7     19.4
 ## 
-## type = B:
+## class = B:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      18.3 0.432 546     17.5     19.2
 ##  2     N1      14.5 0.450 637     13.6     15.4
@@ -7188,7 +7188,7 @@ cycle:stage:type
 ##  3     N3      13.0 0.431 540     12.1     13.8
 ##  4     N3      12.7 0.452 649     11.8     13.6
 ## 
-## type = C:
+## class = C:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      19.2 0.432 546     18.3     20.0
 ##  2     N1      21.6 0.450 637     20.7     22.5
@@ -7203,7 +7203,7 @@ cycle:stage:type
 ##  3     N3      20.8 0.431 540     20.0     21.6
 ##  4     N3      19.5 0.452 649     18.6     20.4
 ## 
-## type = D:
+## class = D:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      15.5 0.432 546     14.7     16.3
 ##  2     N1      18.8 0.450 637     17.9     19.7
@@ -7218,7 +7218,7 @@ cycle:stage:type
 ##  3     N3      18.4 0.431 540     17.5     19.2
 ##  4     N3      19.1 0.452 649     18.2     20.0
 ## 
-## type = E:
+## class = E:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      13.6 0.432 546     12.7     14.4
 ##  2     N1      13.0 0.450 637     12.1     13.9
@@ -7233,7 +7233,7 @@ cycle:stage:type
 ##  3     N3      15.6 0.431 540     14.7     16.4
 ##  4     N3      15.4 0.452 649     14.5     16.3
 ## 
-## type = F:
+## class = F:
 ##  cycle stage emmean    SE  df lower.CL upper.CL
 ##  1     N1      12.3 0.432 546     11.4     13.1
 ##  2     N1      12.6 0.450 637     11.7     13.5
@@ -7252,7 +7252,7 @@ cycle:stage:type
 ## Confidence level used: 0.95 
 ## 
 ## $contrasts
-## type = A:
+## class = A:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  1.67096 0.338 2860   4.947  0.0001
 ##  cycle1 N1 - cycle3 N1  2.12726 0.348 2880   6.115  &lt;.0001
@@ -7321,7 +7321,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  0.13423 0.337 2864   0.398  1.0000
 ##  cycle3 N3 - cycle4 N3 -0.06141 0.340 2865  -0.181  1.0000
 ## 
-## type = B:
+## class = B:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  3.80491 0.338 2860  11.265  &lt;.0001
 ##  cycle1 N1 - cycle3 N1  3.74106 0.348 2880  10.755  &lt;.0001
@@ -7390,7 +7390,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  0.15206 0.337 2864   0.451  1.0000
 ##  cycle3 N3 - cycle4 N3  0.23353 0.340 2865   0.687  0.9999
 ## 
-## type = C:
+## class = C:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1 -2.42629 0.338 2860  -7.183  &lt;.0001
 ##  cycle1 N1 - cycle3 N1 -1.05186 0.348 2880  -3.024  0.1021
@@ -7459,7 +7459,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  1.20626 0.337 2864   3.577  0.0183
 ##  cycle3 N3 - cycle4 N3  1.27752 0.340 2865   3.756  0.0096
 ## 
-## type = D:
+## class = D:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1 -3.28606 0.338 2860  -9.729  &lt;.0001
 ##  cycle1 N1 - cycle3 N1 -4.39910 0.348 2880 -12.647  &lt;.0001
@@ -7528,7 +7528,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3  0.03588 0.337 2864   0.106  1.0000
 ##  cycle3 N3 - cycle4 N3 -0.70120 0.340 2865  -2.061  0.6506
 ## 
-## type = E:
+## class = E:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1  0.56943 0.338 2860   1.686  0.8749
 ##  cycle1 N1 - cycle3 N1  0.47820 0.348 2880   1.375  0.9683
@@ -7597,7 +7597,7 @@ cycle:stage:type
 ##  cycle2 N3 - cycle4 N3 -0.67310 0.337 2864  -1.996  0.6962
 ##  cycle3 N3 - cycle4 N3  0.20408 0.340 2865   0.600  1.0000
 ## 
-## type = F:
+## class = F:
 ##  contrast              estimate    SE   df t.ratio p.value
 ##  cycle1 N1 - cycle2 N1 -0.33297 0.338 2860  -0.986  0.9980
 ##  cycle1 N1 - cycle3 N1 -0.89558 0.348 2880  -2.575  0.2946
@@ -7668,20 +7668,20 @@ cycle:stage:type
 ## 
 ## Degrees-of-freedom method: kenward-roger 
 ## P value adjustment: tukey method for comparing a family of 12 estimates</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>est_means_coverage <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(coverage_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> type) <span class="sc">|&gt;</span> </span>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" tabindex="-1"></a>est_means_coverage <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(coverage_model, pairwise <span class="sc">~</span> cycle<span class="sc">*</span>stage <span class="sc">|</span> class) <span class="sc">|&gt;</span> </span>
 <span id="cb32-2"><a href="#cb32-2" tabindex="-1"></a>    <span class="fu">as.data.frame</span>()</span></code></pre></div>
 </div>
 <div id="plot-2" class="section level3">
 <h3>Plot</h3>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a>est_means_coverage_plot <span class="ot">&lt;-</span> est_means_coverage <span class="sc">|&gt;</span> </span>
-<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">select</span>(type, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" tabindex="-1"></a>  <span class="fu">select</span>(class, cycle, stage, emmean, lower.CL, upper.CL) <span class="sc">|&gt;</span> </span>
 <span id="cb33-3"><a href="#cb33-3" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">72</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb33-4"><a href="#cb33-4" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">group =</span> stage, <span class="at">color =</span> stage, <span class="at">y =</span> emmean, <span class="at">x =</span> cycle)) <span class="sc">+</span></span>
 <span id="cb33-5"><a href="#cb33-5" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">fill =</span> cycle, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb33-6"><a href="#cb33-6" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb33-7"><a href="#cb33-7" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>lower.CL, <span class="at">ymax=</span>upper.CL), <span class="at">width=</span>.<span class="dv">2</span>, <span class="at">alpha =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb33-8"><a href="#cb33-8" tabindex="-1"></a>   <span class="fu">ggtitle</span>(<span class="st">&quot;Microstate Classes&quot;</span>) <span class="sc">+</span></span>
-<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> type, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb33-9"><a href="#cb33-9" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> class, <span class="at">ncol =</span> <span class="dv">6</span>) <span class="sc">+</span></span>
 <span id="cb33-10"><a href="#cb33-10" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb33-11"><a href="#cb33-11" tabindex="-1"></a>   <span class="fu">theme</span>(</span>
 <span id="cb33-12"><a href="#cb33-12" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> size_big, <span class="at">hjust=</span> <span class="fl">0.5</span>),</span>

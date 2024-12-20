@@ -1,5 +1,5 @@
 ---
-title: "Microstate Analysis - Sleep Cycles - 6 Clusters"
+title: "Microstate Analysis - Sleep Cycles - 5 Clusters"
 author: "André Minder"
 date: "2024-03-05"
 output:
@@ -13,7 +13,8 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(message = FALSE,
-                      warning = FALSE)
+                      warning = FALSE,
+                      options(digits=5))
 ```
 
 # Dependencies
@@ -28,13 +29,11 @@ library(readxl)
 library(lmerTest)
 library(kableExtra)
 library(emmeans)
-library(sjPlot)
 library(hms)
+library(sjPlot)
 
 
 pacman::p_load(lme4, nlme, tidyverse, lmerTest, gridExtra, ggplot2)
-
-emm_options(pbkrtest.limit = 3864)
 
 ```
 
@@ -43,9 +42,9 @@ emm_options(pbkrtest.limit = 3864)
 ```{r}
 
 # Define microstates parameters for correlation
-clusters <- 6 # Number of clusters
+clusters <- 5 # Number of clusters
 template <- "GrandGrandMeanTemplate" # used template: Custo2017, Koenig2002, GrandGrandMeanTemplate, or IndividualTemplates
-type <- "sleep_cycles" # resting or sleep
+class <- "sleep_cycles" # resting or sleep
 cycles = 4 # number of cycles
 
 size_big = 14
@@ -60,7 +59,7 @@ size_small = 12
 # First cycle
 filename_ms <- paste0("TemporalParameters_", clusters, " classes_", template)
 
-data_ms <- paste0("data/", type, "/cycles/", filename_ms, ".csv") |> 
+data_ms <- paste0("data/", class, "/cycles/", filename_ms, ".csv") |> 
   read_csv()
 
 ```
@@ -104,22 +103,21 @@ data_long_duration <- data_ms_clean |>
   select(ORSEE, group, condition, contains("mean_duration"), -contains("all")) |> 
   pivot_longer(
     cols = -c("ORSEE", "group", "condition"),
-    names_to = "type",
+    names_to = "class",
     values_to = "duration"
   ) |> 
   mutate(condition = str_sub(condition, 6, -1)) |> 
   rename(cycle = condition,
          stage = group) |> 
-  mutate(type = str_sub(type, -1, -1),
-         type = toupper(type),
+  mutate(class = str_sub(class, -1, -1),
+         class = toupper(class),
          cycle = as.factor(cycle),
-         type = as.factor(type),
+         class = as.factor(class),
          stage = as.factor(stage),
          ORSEE = as.factor(ORSEE),
          duration = duration * 1000,
          stage = fct_relevel(stage, c("N1", "N2", "N3")),
-         type = fct_recode(type, "F" = "G"),
-         type = fct_relevel(type, c("A", "B", "C", "D", "E", "F")))
+         class = fct_relevel(class, c("A", "B", "C", "D", "E")))
 
 ```
 
@@ -130,21 +128,20 @@ data_long_occurrence <- data_ms_clean |>
   select(ORSEE, group, condition, contains("mean_occurrence"), -contains("all")) |> 
   pivot_longer(
     cols = -c("ORSEE", "group", "condition"),
-    names_to = "type",
+    names_to = "class",
     values_to = "occurrence"
   ) |> 
   mutate(condition = str_sub(condition, 6, -1)) |> 
   rename(cycle = condition,
          stage = group) |> 
-  mutate(type = str_sub(type, -1, -1),
-         type = toupper(type),
+  mutate(class = str_sub(class, -1, -1),
+         class = toupper(class),
          cycle = as.factor(cycle),
-         type = as.factor(type),
+         class = as.factor(class),
          stage = as.factor(stage),
          ORSEE = as.factor(ORSEE),
          stage = fct_relevel(stage, c("N1", "N2", "N3")),
-         type = fct_recode(type, "F" = "G"),
-         type = fct_relevel(type, c("A", "B", "C", "D", "E", "F")))
+         class = fct_relevel(class, c("A", "B", "C", "D", "E")))
 
 ```
 
@@ -155,22 +152,21 @@ data_long_coverage <- data_ms_clean |>
   select(ORSEE, group, condition, contains("coverage")) |> 
   pivot_longer(
     cols = -c("ORSEE", "group", "condition"),
-    names_to = "type",
+    names_to = "class",
     values_to = "coverage"
   ) |> 
   mutate(condition = str_sub(condition, 6, -1)) |> 
   rename(cycle = condition,
          stage = group) |> 
-  mutate(type = str_sub(type, -1, -1),
-         type = toupper(type),
+  mutate(class = str_sub(class, -1, -1),
+         class = toupper(class),
          cycle = as.factor(cycle),
-         type = as.factor(type),
+         class = as.factor(class),
          stage = as.factor(stage),
          ORSEE = as.factor(ORSEE),
          coverage = coverage,
          stage = fct_relevel(stage, c("N1", "N2", "N3")),
-         type = fct_recode(type, "F" = "G"),
-         type = fct_relevel(type, c("A", "B", "C", "D", "E", "F")))
+         class = fct_relevel(class, c("A", "B", "C", "D", "E")))
 
 ```
 
@@ -205,46 +201,54 @@ data_ms_clean |>
 
 ```
 
-
 # Statistical Inference
 
 ## Duration
 
 ### Model
 ```{r}
-duration_model <- lmer(duration ~ cycle * stage * type + 
-                         (1| ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|type:ORSEE),
+
+# Calculate model
+duration_model <- lmer(duration ~ cycle * stage * class + 
+                         (1| ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|class:ORSEE),
                        data = data_long_duration, REML = TRUE)
 
 tab_model(duration_model)
+
 ```
 
 ### Type III Test
 ```{r}
+# Type III test
 anova_duration <- anova(duration_model)
 kable(anova_duration, digits = 2, caption = "F-Tests for Duration Model") |> 
    kable_classic(full_width = FALSE)
+
 ```
 
-### Post-hoc Test
-```{r}
-emmeans(duration_model, pairwise ~ cycle*stage | type)
 
-est_means_duration <- emmeans(duration_model, pairwise ~ cycle*stage | type) |> 
+### Post-hoc Tests
+```{r}
+# Post-hoc Test
+emmeans(duration_model, pairwise ~ cycle * stage | class)
+
+duration_model_emm <- emmeans(duration_model, pairwise ~ cycle * stage | class) |> 
   as.data.frame()
 ```
 
 ### Plot
 ```{r}
-duration_emm_plot <- est_means_duration |> 
-  select(type, cycle, stage, emmean, lower.CL, upper.CL) |> 
-  slice(1:72) |> 
+
+# Plot
+duration_emm_plot <- duration_model_emm |> 
+  select(class, cycle, stage, emmean, lower.CL, upper.CL) |> 
+  slice(1:60) |> 
   ggplot(aes(group = stage, color = stage, y = emmean, x = cycle)) +
-  geom_line(fill = cycle, alpha = .6) +
-  geom_point(stat="identity", size = 3, alpha = .6) +
-  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .6) +
+  geom_line(fill = cycle, alpha = .9) +
+  geom_point(stat="identity", size = 3, alpha = .7) +
+  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .9) +
   ggtitle("Microstate Classes") +
-  facet_wrap( ~ type, ncol = 6) +
+  facet_wrap( ~ class, ncol = 5) +
   theme_bw() +
   theme(
     plot.title = element_text(size = size_big, hjust= 0.5),
@@ -263,44 +267,58 @@ duration_emm_plot <- est_means_duration |>
 
 duration_emm_plot
 
+ggsave("duration_plot.png",
+        plot = duration_emm_plot,
+        width = 10,
+        dpi = 300,
+        bg = "transparent",
+        path = "R:/MicrostateAnalysis/sleepData/MS_SleepMarkers/scripts/graphs/sleep/cycles")
+
 ```
+
 
 ## Occurrence
 
 ### Model
 ```{r}
-occurrence_model <- lmer(occurrence ~ cycle * stage * type +
-                         (1 | ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|type:ORSEE), 
+# Calculate model
+occurrence_model <- lmer(occurrence ~ cycle * stage * class +
+                         (1 | ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|class:ORSEE), 
                          data = data_long_occurrence, REML = TRUE)
+
 tab_model(occurrence_model)
 ```
 
 ### Type III Test
 ```{r}
+# Type III test
 anova_occurrence <- anova(occurrence_model)
-kable(anova_occurrence, digits = 2, caption = "F-Tests for the Occurrence Model") |> 
+kable(anova_occurrence, digits = 3, caption = "F-Tests for the Occurrence Model") |> 
    kable_classic(full_width = FALSE)
 ```
 
 ### Post-hoc Tests
 ```{r}
-emmeans(occurrence_model, pairwise ~ cycle*stage | type)
+# Post-hoc tests
 
-est_means_occurrence <- emmeans(occurrence_model, pairwise ~ cycle*stage | type) |> 
+emmeans(occurrence_model, pairwise ~ cycle * stage | class)
+
+est_means_occurrence <- emmeans(occurrence_model, pairwise ~ cycle * stage | class) |> 
   as.data.frame()
 ```
 
 ### Plot
 ```{r}
+# Plot
 est_means_occurrence_plot <- est_means_occurrence |> 
-  select(type, cycle, stage, emmean, lower.CL, upper.CL) |> 
-  slice(1:72) |> 
+  select(class, cycle, stage, emmean, lower.CL, upper.CL) |> 
+  slice(1:60) |> 
   ggplot(aes(group = stage, color = stage, y = emmean, x = cycle)) +
-  geom_line(fill = cycle, alpha = .6) +
-  geom_point(stat="identity", size = 3, alpha = .6) +
-  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .6) +
+  geom_line(fill = cycle, alpha = .9) +
+  geom_point(stat="identity", size = 3, alpha = .7) +
+  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .9) +
   ggtitle("Microstate Classes") +
-  facet_wrap( ~ type, ncol = 6) +
+  facet_wrap( ~ class, ncol = 5) +
   theme_bw() +
   theme(
     plot.title = element_text(size = size_big, hjust= 0.5),
@@ -313,11 +331,18 @@ est_means_occurrence_plot <- est_means_occurrence |>
     legend.position="right",
   ) +
   labs(color = "Sleep Stages") +
-  scale_y_continuous(name = "Occurence (per second)", limits = c(0,5), expand = c(0,0)) +
+  scale_y_continuous(name = "Occurence (per second)", limits = c(0,6), expand = c(0,0)) +
   scale_x_discrete(name= "Sleep Cycles") +
   scale_color_manual(values = c("#D8B70A","#02401B","#972D15"))
 
 est_means_occurrence_plot
+
+ggsave("occurrence_plot.png",
+        plot = est_means_occurrence_plot,
+        width = 10,
+        dpi = 300,
+        bg = "transparent",
+        path = "R:/MicrostateAnalysis/sleepData/MS_SleepMarkers/scripts/graphs/sleep/cycles")
 
 ```
 
@@ -325,8 +350,9 @@ est_means_occurrence_plot
 
 ### Model
 ```{r}
-coverage_model <- lmer(coverage ~ cycle * stage * type + 
-                         (1 | ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|type:ORSEE), 
+# Calculate model
+coverage_model <- lmer(coverage ~ cycle * stage * class + 
+                         (1 | ORSEE) + (1|cycle:ORSEE) + (1|stage:ORSEE) + (1|class:ORSEE), 
                          data = data_long_coverage, REML = TRUE)
 
 tab_model(coverage_model)
@@ -334,6 +360,8 @@ tab_model(coverage_model)
 
 ### Type III Test
 ```{r}
+# Type III test
+
 anova_coverage <- anova(coverage_model)
 kable(anova_coverage, digits = 2, caption = "F-Tests for Coverage Model") |> 
    kable_classic(full_width = FALSE)
@@ -341,23 +369,25 @@ kable(anova_coverage, digits = 2, caption = "F-Tests for Coverage Model") |>
 
 ### Post-hoc Test
 ```{r}
-emmeans(coverage_model, pairwise ~ cycle*stage | type)
+# Post-hoc test
+emmeans(coverage_model, pairwise ~ cycle*stage | class)
 
-est_means_coverage <- emmeans(coverage_model, pairwise ~ cycle*stage | type) |> 
+est_means_coverage <- emmeans(coverage_model, pairwise ~ cycle*stage | class) |> 
     as.data.frame()
 ```
 
 ### Plot
 ```{r}
+# Plot
 est_means_coverage_plot <- est_means_coverage |> 
-  select(type, cycle, stage, emmean, lower.CL, upper.CL) |> 
-  slice(1:72) |> 
+  select(class, cycle, stage, emmean, lower.CL, upper.CL) |> 
+  slice(1:60) |> 
   ggplot(aes(group = stage, color = stage, y = emmean, x = cycle)) +
-  geom_line(fill = cycle, alpha = .6) +
-  geom_point(stat="identity", size = 3, alpha = .6) +
-  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .6) +
-   ggtitle("Microstate Classes") +
-  facet_wrap(~ type, ncol = 6) +
+  geom_line(fill = cycle, alpha = .9) +
+  geom_point(stat="identity", size = 3, alpha = .7) +
+  geom_errorbar(aes(ymin=lower.CL, ymax=upper.CL), width=.2, alpha = .9) +
+  ggtitle("Microstate Classes") +
+  facet_wrap(~ class, ncol = 5) +
   theme_bw() +
    theme(
     plot.title = element_text(size = size_big, hjust= 0.5),
@@ -370,9 +400,17 @@ est_means_coverage_plot <- est_means_coverage |>
     legend.position="right",
   ) +
   labs(color = "Sleep Stages") +
-  scale_y_continuous(name = "Coverage (%)", limits = c(0,30), expand = c(0,0)) +
+  scale_y_continuous(name = "Coverage (%)", limits = c(0,35), expand = c(0,0)) +
   scale_x_discrete(name= "Sleep Cycles") +
   scale_color_manual(values = c("#D8B70A","#02401B","#972D15"))
 
 est_means_coverage_plot
+
+ggsave("coverage_plot.png",
+        plot = est_means_coverage_plot,
+        width = 10,
+        dpi = 300,
+        bg = "transparent",
+        path = "R:/MicrostateAnalysis/sleepData/MS_SleepMarkers/scripts/graphs/sleep/cycles")
+
 ```
